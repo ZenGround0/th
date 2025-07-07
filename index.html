@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>The Hunt Begins</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body{font-family:sans-serif;display:flex;justify-content:center;align-items:center;
+         min-height:100vh;background:#f4f4f8;margin:0}
+    .card{background:#fff;padding:2rem;border-radius:1rem;box-shadow:0 4px 10px rgba(0,0,0,.1);
+          width:clamp(280px,90%,420px);text-align:center}
+    input,button{font-size:1rem;padding:.7rem 1rem;border-radius:.5rem}
+    input{border:1px solid #bbb;width:100%;margin-top:.5rem}
+    button{margin-top:1rem;border:none;cursor:pointer;box-shadow:0 2px 4px rgba(0,0,0,.08)}
+    .error{display:none;color:#c00;font-size:.9rem;margin-top:.5rem}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Enter the secret word</h1>
+    <form id="hunt-form">
+      <input id="pw" autocomplete="off" placeholder="Type it here…" />
+      <button type="submit">Unlock</button>
+      <p id="err" class="error">Nope, try again!</p>
+    </form>
+  </div>
+
+<script>
+/*
+  Map each acceptable password to the file (or URL) that should open next.
+  You can point anywhere: relative file, full URL, or even another sub-domain.
+*/
+const destinations = {
+  moonlight: 'clues/moonlight.html',
+  starlight: 'clues/starlight.html',
+  // add more:  "key": "clues/<whatever>.html"
+};
+
+document.getElementById('hunt-form').addEventListener('submit', evt => {
+  evt.preventDefault();
+  const key = document.getElementById('pw').value.trim().toLowerCase();
+  if (destinations[key]) {
+    window.location.href = destinations[key];
+  } else {
+    document.getElementById('err').style.display = 'block';
+  }
+});
+</script>
+</body>
+</html>
+

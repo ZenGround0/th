@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treasure Hunt - Congratulations!</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="final-section">
+            <h1>🎉 Congratulations! 🎉</h1>
+            <h2>You've completed the Treasure Hunt!</h2>
+            
+            <div class="success-message">
+                <p>Well done! You've successfully solved all the clues and completed the treasure hunt.</p>
+                <p>Your journey through the riddles has come to an end.</p>
+            </div>
+
+            <div class="stats">
+                <h3>Your Progress:</h3>
+                <ul id="progressList"></ul>
+            </div>
+
+            <div class="actions">
+                <button id="resetBtn" class="btn btn-primary">Start New Hunt</button>
+                <a href="index.html" class="btn btn-secondary">Back to Beginning</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = "hunt2025_progress";
+        
+        function loadProgress() {
+            try { 
+                return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; 
+            } catch { 
+                return []; 
+            }
+        }
+
+        const progress = loadProgress();
+        const progressList = document.getElementById('progressList');
+        
+        const clueNames = {
+            "e": "Clue 1: The Letter Riddle",
+            "shadow": "Clue 2: The Shadow Riddle",
+            "time": "Clue 3: The Time Riddle"
+        };
+        
+        progress.forEach(answer => {
+            const li = document.createElement('li');
+            li.textContent = clueNames[answer] || answer;
+            progressList.appendChild(li);
+        });
+
+        document.getElementById('resetBtn').onclick = () => {
+            if (confirm('Start a new treasure hunt? This will reset all your progress.')) {
+                localStorage.removeItem(STORAGE_KEY);
+                window.location.href = 'index.html';
+            }
+        };
+    </script>
+</body>
+</html>

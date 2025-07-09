@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Treasure Hunt 2025</title>
+    <title>Treasure Hunt - Clue 3</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to the Treasure Hunt!</h1>
+        <h1>Treasure Hunt - Stage 3</h1>
         
         <div id="continueSection" class="continue-section" style="display: none;">
             <p>Welcome back! You have progress saved.</p>
@@ -17,10 +17,11 @@
         </div>
 
         <div id="clueSection" class="clue-section">
-            <h2>Clue #1</h2>
+            <h2>Clue #3</h2>
             <p class="clue-text">
-                I am the beginning of everything, the end of everywhere.<br>
-                I'm the beginning of eternity, the end of time and space.<br>
+                The more of me you take, the more you leave behind.<br>
+                I can be measured but never seen.<br>
+                I fly without wings, I cry without eyes.<br>
                 What am I?
             </p>
             
@@ -30,6 +31,10 @@
             </form>
             
             <div id="feedback" class="feedback"></div>
+        </div>
+
+        <div class="navigation">
+            <a href="index.html" class="btn btn-secondary">Back to Start</a>
         </div>
     </div>
 
@@ -78,13 +83,13 @@
         const continueBtn = document.getElementById('continueBtn');
         const resetBtn = document.getElementById('resetBtn');
 
-        if (progress.length > 0) {
+        if (progress.length > 0 && progress.at(-1) !== "shadow") {
             continueSection.style.display = 'block';
             continueBtn.onclick = () => jumpTo(progress.at(-1));
             resetBtn.onclick = () => {
                 if (confirm('Are you sure you want to reset all progress?')) {
                     localStorage.removeItem(STORAGE_KEY);
-                    window.location.reload();
+                    window.location.href = 'index.html';
                 }
             };
         }
@@ -95,14 +100,14 @@
             const input = document.getElementById('passwordInput');
             const answer = input.value.toLowerCase().trim();
             
-            if (clues[answer]) {
+            if (answer === "time") {
                 const currentProgress = loadProgress();
                 if (!currentProgress.includes(answer)) {
                     currentProgress.push(answer);
                     saveProgress(currentProgress);
                 }
                 
-                showFeedback('Correct! Redirecting to next clue...', true);
+                showFeedback('Correct! Redirecting to final page...', true);
                 setTimeout(() => {
                     window.location.href = clues[answer];
                 }, 1500);

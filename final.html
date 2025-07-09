@@ -24,7 +24,7 @@
 
             <div class="actions">
                 <button id="resetBtn" class="btn btn-primary">Start New Hunt</button>
-                <a href="index.html" class="btn btn-secondary">Back to Beginning</a>
+                <a href="landing.html" class="btn btn-secondary">Back to Beginning</a>
             </div>
         </div>
     </div>
@@ -45,7 +45,7 @@
         
         const clueNames = {
             "e": "Clue 1: The Letter Riddle",
-            "shadow": "Clue 2: The Shadow Riddle",
+            "shadow-puppet": "Clue 2: The Shadow Puppet Riddle",
             "time": "Clue 3: The Time Riddle"
         };
         
@@ -58,7 +58,7 @@
         document.getElementById('resetBtn').onclick = () => {
             if (confirm('Start a new treasure hunt? This will reset all your progress.')) {
                 localStorage.removeItem(STORAGE_KEY);
-                window.location.href = 'index.html';
+                window.location.href = 'landing.html';
             }
         };
     </script>

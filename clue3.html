@@ -34,7 +34,7 @@
         </div>
 
         <div class="navigation">
-            <a href="index.html" class="btn btn-secondary">Back to Start</a>
+            <a href="landing.html" class="btn btn-secondary">Back to Start</a>
         </div>
     </div>
 
@@ -43,7 +43,7 @@
         
         const clues = {
             "e": "clue2.html",
-            "shadow": "clue3.html",
+            "shadow-puppet": "clue3.html",
             "time": "final.html"
         };
 
@@ -83,7 +83,7 @@
         const continueBtn = document.getElementById('continueBtn');
         const resetBtn = document.getElementById('resetBtn');
 
-        if (progress.length > 0 && progress.at(-1) !== "shadow") {
+        if (progress.length > 0 && progress.at(-1) !== "shadow-puppet") {
             continueSection.style.display = 'block';
             continueBtn.onclick = () => jumpTo(progress.at(-1));
             resetBtn.onclick = () => {

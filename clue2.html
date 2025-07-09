@@ -19,13 +19,18 @@
         <div id="clueSection" class="clue-section">
             <h2>Clue #2</h2>
             <p class="clue-text">
-                I follow you all the time and copy your every move,<br>
-                but you can't touch me or catch me.<br>
-                What am I?
+                In darkness I dance, yet I have no feet,<br>
+                I mimic your moves, a silent repeat.<br>
+                Behind the screen, I tell tales without sound,<br>
+                What performance art am I, where light and dark are bound?
             </p>
             
-            <form id="passwordForm" class="password-form">
-                <input type="text" id="passwordInput" placeholder="Enter your answer" autocomplete="off">
+            <form id="passwordForm" class="multi-word-form">
+                <div class="word-input-group">
+                    <input type="text" id="word1" class="word-input" placeholder="First word" autocomplete="off">
+                    <span class="word-separator">+</span>
+                    <input type="text" id="word2" class="word-input" placeholder="Second word" autocomplete="off">
+                </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
             
@@ -33,7 +38,7 @@
         </div>
 
         <div class="navigation">
-            <a href="index.html" class="btn btn-secondary">Back to Start</a>
+            <a href="landing.html" class="btn btn-secondary">Back to Start</a>
         </div>
     </div>
 
@@ -42,7 +47,7 @@
         
         const clues = {
             "e": "clue2.html",
-            "shadow": "clue3.html",
+            "shadow-puppet": "clue3.html",
             "time": "final.html"
         };
 
@@ -96,10 +101,17 @@
         document.getElementById('passwordForm').addEventListener('submit', (e) => {
             e.preventDefault();
             
-            const input = document.getElementById('passwordInput');
-            const answer = input.value.toLowerCase().trim();
+            const word1 = document.getElementById('word1').value.toLowerCase().trim();
+            const word2 = document.getElementById('word2').value.toLowerCase().trim();
             
-            if (answer === "shadow") {
+            if (!word1 || !word2) {
+                showFeedback('Please fill in both words!', false);
+                return;
+            }
+            
+            const answer = `${word1}-${word2}`;
+            
+            if (clues[answer]) {
                 const currentProgress = loadProgress();
                 if (!currentProgress.includes(answer)) {
                     currentProgress.push(answer);
@@ -112,7 +124,9 @@
                 }, 1500);
             } else {
                 showFeedback('Not quite right. Try again!', false);
-                input.value = '';
+                document.getElementById('word1').value = '';
+                document.getElementById('word2').value = '';
+                document.getElementById('word1').focus();
             }
         });
     </script>

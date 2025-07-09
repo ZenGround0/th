@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Treasure Hunt - Clue 2</title>
+    <title>Treasure Hunt 2025</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Treasure Hunt - Stage 2</h1>
+        <h1>Welcome to the Treasure Hunt!</h1>
         
         <div id="continueSection" class="continue-section" style="display: none;">
             <p>Welcome back! You have progress saved.</p>
@@ -17,28 +17,29 @@
         </div>
 
         <div id="clueSection" class="clue-section">
-            <h2>Clue #2</h2>
+            <h2>Clue #1</h2>
             <p class="clue-text">
-                In darkness I dance, yet I have no feet,<br>
-                I mimic your moves, a silent repeat.<br>
-                Behind the screen, I tell tales without sound,<br>
-                What performance art am I, where light and dark are bound?
+                I am the beginning of everything, the end of everywhere.<br>
+                I'm the beginning of eternity, the end of time and space.<br>
+                What am I?
             </p>
             
-            <form id="passwordForm" class="multi-word-form">
-                <div class="word-input-group">
-                    <input type="text" id="word1" class="word-input" placeholder="First word" autocomplete="off">
-                    <span class="word-separator">+</span>
-                    <input type="text" id="word2" class="word-input" placeholder="Second word" autocomplete="off">
-                </div>
+            <div class="hint-section">
+                <details>
+                    <summary>Need a hint?</summary>
+                    <p class="hint-text">
+                        Sometimes the answer is right in front of you, but a fresh perspective helps.<br>
+                        <strong>Contact the Hunt Master</strong> at the registration desk for a verbal hint about this riddle.
+                    </p>
+                </details>
+            </div>
+            
+            <form id="passwordForm" class="password-form">
+                <input type="text" id="passwordInput" placeholder="Enter your answer" autocomplete="off">
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
             
             <div id="feedback" class="feedback"></div>
-        </div>
-
-        <div class="navigation">
-            <a href="index.html" class="btn btn-secondary">Back to Start</a>
         </div>
     </div>
 
@@ -87,13 +88,13 @@
         const continueBtn = document.getElementById('continueBtn');
         const resetBtn = document.getElementById('resetBtn');
 
-        if (progress.length > 0 && progress.at(-1) !== "e") {
+        if (progress.length > 0) {
             continueSection.style.display = 'block';
             continueBtn.onclick = () => jumpTo(progress.at(-1));
             resetBtn.onclick = () => {
                 if (confirm('Are you sure you want to reset all progress?')) {
                     localStorage.removeItem(STORAGE_KEY);
-                    window.location.href = 'clue1.html';
+                    window.location.reload();
                 }
             };
         }
@@ -101,15 +102,8 @@
         document.getElementById('passwordForm').addEventListener('submit', (e) => {
             e.preventDefault();
             
-            const word1 = document.getElementById('word1').value.toLowerCase().trim();
-            const word2 = document.getElementById('word2').value.toLowerCase().trim();
-            
-            if (!word1 || !word2) {
-                showFeedback('Please fill in both words!', false);
-                return;
-            }
-            
-            const answer = `${word1}-${word2}`;
+            const input = document.getElementById('passwordInput');
+            const answer = input.value.toLowerCase().trim();
             
             if (clues[answer]) {
                 const currentProgress = loadProgress();
@@ -124,9 +118,7 @@
                 }, 1500);
             } else {
                 showFeedback('Not quite right. Try again!', false);
-                document.getElementById('word1').value = '';
-                document.getElementById('word2').value = '';
-                document.getElementById('word1').focus();
+                input.value = '';
             }
         });
     </script>

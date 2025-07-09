@@ -3,124 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Treasure Hunt 2025</title>
+    <title>Treasure Hunt 2025 - Welcome</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to the Treasure Hunt!</h1>
+        <h1>Welcome to the Treasure Hunt 2025!</h1>
         
-        <div id="continueSection" class="continue-section" style="display: none;">
-            <p>Welcome back! You have progress saved.</p>
-            <button id="continueBtn" class="btn btn-primary">Continue Hunt</button>
-            <button id="resetBtn" class="btn btn-secondary">Reset Progress</button>
-        </div>
-
-        <div id="clueSection" class="clue-section">
-            <h2>Clue #1</h2>
-            <p class="clue-text">
-                I am the beginning of everything, the end of everywhere.<br>
-                I'm the beginning of eternity, the end of time and space.<br>
-                What am I?
-            </p>
+        <div class="instructions-section">
+            <h2>How to Play</h2>
+            <p>You'll encounter various riddles and puzzles throughout this treasure hunt. Each correct answer will lead you to the next clue.</p>
             
-            <div class="hint-section">
-                <details>
-                    <summary>Need a hint?</summary>
-                    <p class="hint-text">
-                        Sometimes the answer is right in front of you, but a fresh perspective helps.<br>
-                        <strong>Contact the Hunt Master</strong> at the registration desk for a verbal hint about this riddle.
-                    </p>
-                </details>
+            <div class="important-note">
+                <h3>Important: Multi-Word Answers</h3>
+                <p>Some clues require answers with <strong>multiple words</strong>. When you see multiple input boxes, enter each word in its own box. All words must be correct to proceed!</p>
+                <p>For example, if the answer is "shadow dog", you would enter:</p>
+                <ul>
+                    <li>First box: shadow</li>
+                    <li>Second box: dog</li>
+                </ul>
             </div>
             
-            <form id="passwordForm" class="password-form">
-                <input type="text" id="passwordInput" placeholder="Enter your answer" autocomplete="off">
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
-            
-            <div id="feedback" class="feedback"></div>
+            <div class="tips-section">
+                <h3>Tips</h3>
+                <ul>
+                    <li>Answers are not case-sensitive</li>
+                    <li>Don't include punctuation in your answers</li>
+                    <li>Your progress is automatically saved</li>
+                    <li>Some clues have hints available - look for the hint button!</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="start-section">
+            <p>Ready to begin your adventure?</p>
+            <a href="clue1.html" class="btn btn-primary btn-large">Start the Hunt!</a>
         </div>
     </div>
-
-    <script>
-        const STORAGE_KEY = "hunt2025_progress";
-        
-        const clues = {
-            "e": "clue2.html",
-            "shadow": "clue3.html",
-            "time": "final.html"
-        };
-
-        function loadProgress() {
-            try { 
-                return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; 
-            } catch { 
-                return []; 
-            }
-        }
-
-        function saveProgress(arr) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
-        }
-
-        function jumpTo(lastPassword) {
-            if (clues[lastPassword]) {
-                window.location.href = clues[lastPassword];
-            }
-        }
-
-        function showFeedback(message, isSuccess) {
-            const feedback = document.getElementById('feedback');
-            feedback.textContent = message;
-            feedback.className = isSuccess ? 'feedback success' : 'feedback error';
-            feedback.style.display = 'block';
-            
-            if (!isSuccess) {
-                setTimeout(() => {
-                    feedback.style.display = 'none';
-                }, 3000);
-            }
-        }
-
-        const progress = loadProgress();
-        const continueSection = document.getElementById('continueSection');
-        const continueBtn = document.getElementById('continueBtn');
-        const resetBtn = document.getElementById('resetBtn');
-
-        if (progress.length > 0) {
-            continueSection.style.display = 'block';
-            continueBtn.onclick = () => jumpTo(progress.at(-1));
-            resetBtn.onclick = () => {
-                if (confirm('Are you sure you want to reset all progress?')) {
-                    localStorage.removeItem(STORAGE_KEY);
-                    window.location.reload();
-                }
-            };
-        }
-
-        document.getElementById('passwordForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const input = document.getElementById('passwordInput');
-            const answer = input.value.toLowerCase().trim();
-            
-            if (clues[answer]) {
-                const currentProgress = loadProgress();
-                if (!currentProgress.includes(answer)) {
-                    currentProgress.push(answer);
-                    saveProgress(currentProgress);
-                }
-                
-                showFeedback('Correct! Redirecting to next clue...', true);
-                setTimeout(() => {
-                    window.location.href = clues[answer];
-                }, 1500);
-            } else {
-                showFeedback('Not quite right. Try again!', false);
-                input.value = '';
-            }
-        });
-    </script>
 </body>
 </html>

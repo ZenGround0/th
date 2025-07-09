@@ -24,7 +24,7 @@
 
             <div class="actions">
                 <button id="resetBtn" class="btn btn-primary">Start New Hunt</button>
-                <a href="landing.html" class="btn btn-secondary">Back to Beginning</a>
+                <a href="index.html" class="btn btn-secondary">Back to Beginning</a>
             </div>
         </div>
     </div>
@@ -58,7 +58,7 @@
         document.getElementById('resetBtn').onclick = () => {
             if (confirm('Start a new treasure hunt? This will reset all your progress.')) {
                 localStorage.removeItem(STORAGE_KEY);
-                window.location.href = 'landing.html';
+                window.location.href = 'index.html';
             }
         };
     </script>

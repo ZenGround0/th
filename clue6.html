@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Treasure Hunt - Clue 3</title>
+    <title>Treasure Hunt - Clue 6</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Treasure Hunt - Stage 3</h1>
+        <h1>Treasure Hunt - Stage 6</h1>
         
         <div id="continueSection" class="continue-section" style="display: none;">
             <p>Welcome back! You have progress saved.</p>
@@ -17,27 +17,24 @@
         </div>
 
         <div id="clueSection" class="clue-section">
-            <h2>Clue #3</h2>
+            <h2>Clue #6</h2>
             <p class="clue-text">
-                A reptile washing up, what has he written?
+                The name of my favorite mummy
             </p>
             
             <div class="hint-section">
                 <details>
                     <summary>Need a hint?</summary>
                     <p class="hint-text">
-                        <a href="https://youtu.be/VA770wpLX-Q?si=dtw3LIVN-p3JFxga&t=175" target="_blank">Watch this video at 2:55</a><br>
-                        <strong>Contact the Hunt Master</strong> if you need more help.
+                        She left the bio laboratory with its reagents glimmering bright<br>
+                        to help old Jeff allow for your treasure to take flight.<br>
+                        <strong>Contact the Hunt Master</strong> for more guidance.
                     </p>
                 </details>
             </div>
             
-            <form id="passwordForm" class="multi-word-form">
-                <div class="word-input-group">
-                    <input type="text" id="word1" class="word-input" placeholder="First word" autocomplete="off">
-                    <span class="word-separator">+</span>
-                    <input type="text" id="word2" class="word-input" placeholder="Second word" autocomplete="off">
-                </div>
+            <form id="passwordForm" class="password-form">
+                <input type="text" id="passwordInput" placeholder="Enter your answer" autocomplete="off">
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
             
@@ -99,7 +96,7 @@
         const continueBtn = document.getElementById('continueBtn');
         const resetBtn = document.getElementById('resetBtn');
 
-        if (progress.length > 0 && progress.at(-1) !== "turkey-anteater") {
+        if (progress.length > 0 && progress.at(-1) !== "yucca-sego-lily") {
             continueSection.style.display = 'block';
             continueBtn.onclick = () => jumpTo(progress.at(-1));
             resetBtn.onclick = () => {
@@ -113,15 +110,8 @@
         document.getElementById('passwordForm').addEventListener('submit', (e) => {
             e.preventDefault();
             
-            const word1 = document.getElementById('word1').value.toLowerCase().trim();
-            const word2 = document.getElementById('word2').value.toLowerCase().trim();
-            
-            if (!word1 || !word2) {
-                showFeedback('Please fill in both words!', false);
-                return;
-            }
-            
-            const answer = `${word1}-${word2}`;
+            const input = document.getElementById('passwordInput');
+            const answer = input.value.toLowerCase().trim();
             
             if (clues[answer]) {
                 const currentProgress = loadProgress();
@@ -136,9 +126,7 @@
                 }, 1500);
             } else {
                 showFeedback('Not quite right. Try again!', false);
-                document.getElementById('word1').value = '';
-                document.getElementById('word2').value = '';
-                document.getElementById('word1').focus();
+                input.value = '';
             }
         });
     </script>

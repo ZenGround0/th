@@ -47,10 +47,11 @@
         </div>
     </div>
     
+    <script src="crypto-utils.js"></script>
     <script src="clues.js"></script>
     <script>
         const STORAGE_KEY = "hunt2025_progress";
-        const clues = window.CLUES_MAP;
+        const clues = window.SECURE_CLUES_MAP;
         
         function loadProgress() {
             try { 
@@ -60,9 +61,13 @@
             }
         }
         
-        function jumpTo(lastPassword) {
-            if (clues && clues[lastPassword]) {
-                window.location.href = clues[lastPassword];
+        async function jumpTo(lastPassword) {
+            const hash = await cryptoUtils.sha256(lastPassword);
+            if (clues[hash]) {
+                const nextPage = await cryptoUtils.decrypt(lastPassword, clues[hash]);
+                if (nextPage) {
+                    window.location.href = nextPage;
+                }
             }
         }
         
@@ -73,7 +78,7 @@
 
         if (progress.length > 0) {
             continueSection.style.display = 'block';
-            continueBtn.onclick = () => jumpTo(progress.at(-1));
+            continueBtn.onclick = async () => await jumpTo(progress.at(-1));
             resetBtn.onclick = () => {
                 if (confirm('Are you sure you want to reset all progress?')) {
                     localStorage.removeItem(STORAGE_KEY);

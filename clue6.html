@@ -45,19 +45,11 @@
         </div>
     </div>
 
+    <script src="clues.js"></script>
     <script>
         const STORAGE_KEY = "hunt2025_progress";
         
-        const clues = {
-            "kinkajou": "clue2.html",
-            "turkey-anteater": "clue3.html",
-            "hand-basin": "clue4.html",
-            "sit-on-us": "clue5.html",
-            "yucca-sego-lily": "clue6.html",
-            "zhur": "clue7.html",
-            "cavansite": "clue8.html",
-            "ribosome": "final.html"
-        };
+        const clues = window.CLUES_MAP;
 
         function loadProgress() {
             try { 

@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Treasure Hunt - Clue 4</title>
+    <title>Treasure Hunt - Clue 2</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Treasure Hunt - Stage 4</h1>
+        <h1>Treasure Hunt - Stage 2</h1>
         
         <div id="continueSection" class="continue-section" style="display: none;">
             <p>Welcome back! You have progress saved.</p>
@@ -17,18 +17,26 @@
         </div>
 
         <div id="clueSection" class="clue-section">
-            <h2>Clue #4</h2>
+            <h2>Clue #2</h2>
             <p class="clue-text">
-                Children's flower pot says: PLEASE DO NOT
+                First word — Left of the praying mantis.<br>
+                Second word — In between the zebras.
             </p>
+            
+            <div class="hint-section">
+                <details>
+                    <summary>Need a hint?</summary>
+                    <p class="hint-text">
+                        Remember the peacock stands <strong>alone<strong>
+                    </p>
+                </details>
+            </div>
             
             <form id="passwordForm" class="multi-word-form">
                 <div class="word-input-group">
                     <input type="text" id="word1" class="word-input" placeholder="First word" autocomplete="off">
                     <span class="word-separator">+</span>
                     <input type="text" id="word2" class="word-input" placeholder="Second word" autocomplete="off">
-                    <span class="word-separator">+</span>
-                    <input type="text" id="word3" class="word-input" placeholder="Third word" autocomplete="off">
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
@@ -41,19 +49,12 @@
         </div>
     </div>
 
+    <script src="crypto-utils.js"></script>
+    <script src="clues.js"></script>
     <script>
         const STORAGE_KEY = "hunt2025_progress";
         
-        const clues = {
-            "kinkajou": "clue2.html",
-            "turkey-anteater": "clue3.html",
-            "hand-basin": "clue4.html",
-            "sit-on-us": "clue5.html",
-            "yucca-sego-lily": "clue6.html",
-            "zhur": "clue7.html",
-            "cavansite": "clue8.html",
-            "ribosome": "final.html"
-        };
+        const clues = window.SECURE_CLUES_MAP;
 
         function loadProgress() {
             try { 
@@ -67,9 +68,13 @@
             localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
         }
 
-        function jumpTo(lastPassword) {
-            if (clues[lastPassword]) {
-                window.location.href = clues[lastPassword];
+        async function jumpTo(lastPassword) {
+            const hash = await cryptoUtils.sha256(lastPassword);
+            if (clues[hash]) {
+                const nextPage = await cryptoUtils.decrypt(lastPassword, clues[hash]);
+                if (nextPage) {
+                    window.location.href = nextPage;
+                }
             }
         }
 
@@ -91,9 +96,9 @@
         const continueBtn = document.getElementById('continueBtn');
         const resetBtn = document.getElementById('resetBtn');
 
-        if (progress.length > 0 && progress.at(-1) !== "hand-basin") {
+        if (progress.length > 0 && progress.at(-1) !== "kinkajou") {
             continueSection.style.display = 'block';
-            continueBtn.onclick = () => jumpTo(progress.at(-1));
+            continueBtn.onclick = async () => await jumpTo(progress.at(-1));
             resetBtn.onclick = () => {
                 if (confirm('Are you sure you want to reset all progress?')) {
                     localStorage.removeItem(STORAGE_KEY);
@@ -102,36 +107,48 @@
             };
         }
 
-        document.getElementById('passwordForm').addEventListener('submit', (e) => {
+        document.getElementById('passwordForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const word1 = document.getElementById('word1').value.toLowerCase().trim();
             const word2 = document.getElementById('word2').value.toLowerCase().trim();
-            const word3 = document.getElementById('word3').value.toLowerCase().trim();
             
-            if (!word1 || !word2 || !word3) {
-                showFeedback('Please fill in all three words!', false);
+            if (!word1 || !word2) {
+                showFeedback('Please fill in both words!', false);
                 return;
             }
             
-            const answer = `${word1}-${word2}-${word3}`;
+            const answer = `${word1}-${word2}`;
             
-            if (clues[answer]) {
-                const currentProgress = loadProgress();
-                if (!currentProgress.includes(answer)) {
-                    currentProgress.push(answer);
-                    saveProgress(currentProgress);
-                }
+            // Hash the password
+            const hash = await cryptoUtils.sha256(answer);
+            
+            // Check if hash exists in secure map
+            if (clues[hash]) {
+                // Decrypt the filename
+                const nextPage = await cryptoUtils.decrypt(answer, clues[hash]);
                 
-                showFeedback('Correct! Redirecting to next clue...', true);
-                setTimeout(() => {
-                    window.location.href = clues[answer];
-                }, 1500);
+                if (nextPage) {
+                    const currentProgress = loadProgress();
+                    if (!currentProgress.includes(answer)) {
+                        currentProgress.push(answer);
+                        saveProgress(currentProgress);
+                    }
+                    
+                    showFeedback('Correct! Redirecting to next clue...', true);
+                    setTimeout(() => {
+                        window.location.href = nextPage;
+                    }, 1500);
+                } else {
+                    showFeedback('Not quite right. Try again!', false);
+                    document.getElementById('word1').value = '';
+                    document.getElementById('word2').value = '';
+                    document.getElementById('word1').focus();
+                }
             } else {
                 showFeedback('Not quite right. Try again!', false);
                 document.getElementById('word1').value = '';
                 document.getElementById('word2').value = '';
-                document.getElementById('word3').value = '';
                 document.getElementById('word1').focus();
             }
         });

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treasure Hunt - Clue 5</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Treasure Hunt - Stage 5</h1>
+        
+        <div id="continueSection" class="continue-section" style="display: none;">
+            <p>Welcome back! You have progress saved.</p>
+            <button id="continueBtn" class="btn btn-primary">Continue Hunt</button>
+            <button id="resetBtn" class="btn btn-secondary">Reset Progress</button>
+        </div>
+
+        <div id="clueSection" class="clue-section">
+            <h2>Clue #5</h2>
+            <p class="clue-text">
+                By the calochortus circle carved into the rock, these two graven images rise right above the walk.<br>
+                On the left is Solomon seal as false as you could be.<br>
+                To the right's a giant sunflower attracting all the bees.<br>
+                Find their names and type them in the key is yours for the slaughter.<br>
+                But be careful lest the bodhster boy jumps swimming in the WATAAAAH!
+            </p>
+            
+            <form id="passwordForm" class="multi-word-form">
+                <div class="word-input-group">
+                    <input type="text" id="word1" class="word-input" placeholder="First word" autocomplete="off">
+                    <span class="word-separator">+</span>
+                    <input type="text" id="word2" class="word-input" placeholder="Second word" autocomplete="off">
+                    <span class="word-separator">+</span>
+                    <input type="text" id="word3" class="word-input" placeholder="Third word" autocomplete="off">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            
+            <div id="feedback" class="feedback"></div>
+        </div>
+
+        <div class="navigation">
+            <a href="index.html" class="btn btn-secondary">Back to Start</a>
+        </div>
+    </div>
+
+    <script src="crypto-utils.js"></script>
+    <script src="clues.js"></script>
+    <script>
+        const STORAGE_KEY = "hunt2025_progress";
+        
+        const clues = window.SECURE_CLUES_MAP;
+
+        function loadProgress() {
+            try { 
+                return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; 
+            } catch { 
+                return []; 
+            }
+        }
+
+        function saveProgress(arr) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+        }
+
+        async function jumpTo(lastPassword) {
+            const hash = await cryptoUtils.sha256(lastPassword);
+            if (clues[hash]) {
+                const nextPage = await cryptoUtils.decrypt(lastPassword, clues[hash]);
+                if (nextPage) {
+                    window.location.href = nextPage;
+                }
+            }
+        }
+
+        function showFeedback(message, isSuccess) {
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = message;
+            feedback.className = isSuccess ? 'feedback success' : 'feedback error';
+            feedback.style.display = 'block';
+            
+            if (!isSuccess) {
+                setTimeout(() => {
+                    feedback.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        const progress = loadProgress();
+        const continueSection = document.getElementById('continueSection');
+        const continueBtn = document.getElementById('continueBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        if (progress.length > 0 && progress.at(-1) !== "sit-on-us") {
+            continueSection.style.display = 'block';
+            continueBtn.onclick = async () => await jumpTo(progress.at(-1));
+            resetBtn.onclick = () => {
+                if (confirm('Are you sure you want to reset all progress?')) {
+                    localStorage.removeItem(STORAGE_KEY);
+                    window.location.href = 'clue1.html';
+                }
+            };
+        }
+
+        document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const word1 = document.getElementById('word1').value.toLowerCase().trim();
+            const word2 = document.getElementById('word2').value.toLowerCase().trim();
+            const word3 = document.getElementById('word3').value.toLowerCase().trim();
+            
+            if (!word1 || !word2 || !word3) {
+                showFeedback('Please fill in all three words!', false);
+                return;
+            }
+            
+            const answer = `${word1}-${word2}-${word3}`;
+            
+            // Hash the password
+            const hash = await cryptoUtils.sha256(answer);
+            
+            // Check if hash exists in secure map
+            if (clues[hash]) {
+                // Decrypt the filename
+                const nextPage = await cryptoUtils.decrypt(answer, clues[hash]);
+                
+                if (nextPage) {
+                    const currentProgress = loadProgress();
+                    if (!currentProgress.includes(answer)) {
+                        currentProgress.push(answer);
+                        saveProgress(currentProgress);
+                    }
+                    
+                    showFeedback('Correct! Redirecting to next clue...', true);
+                    setTimeout(() => {
+                        window.location.href = nextPage;
+                    }, 1500);
+                } else {
+                    showFeedback('Not quite right. Try again!', false);
+                    document.getElementById('word1').value = '';
+                    document.getElementById('word2').value = '';
+                    document.getElementById('word3').value = '';
+                    document.getElementById('word1').focus();
+                }
+            } else {
+                showFeedback('Not quite right. Try again!', false);
+                document.getElementById('word1').value = '';
+                document.getElementById('word2').value = '';
+                document.getElementById('word3').value = '';
+                document.getElementById('word1').focus();
+            }
+        });
+    </script>
+</body>
+</html>

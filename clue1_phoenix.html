@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Treasure Hunt - Clue 8</title>
+    <title>Treasure Hunt 2025</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Treasure Hunt - Stage 8</h1>
+        <h1>Welcome to the Treasure Hunt!</h1>
         
         <div id="continueSection" class="continue-section" style="display: none;">
             <p>Welcome back! You have progress saved.</p>
@@ -17,11 +17,21 @@
         </div>
 
         <div id="clueSection" class="clue-section">
-            <h2>Clue #8</h2>
+            <h2>Clue #1</h2>
             <p class="clue-text">
-                The most Wyatt exhibit on the top floor.<br>
-                A plastic model of his favorite structure which is called...
+                " ___ sand ____ Jamaican ____ mourning ____ _____ SMALL ____ ____ superb"<br>
+                <br>
+                Find the 20th word in this sequence
             </p>
+            
+            <div class="hint-section">
+                <details>
+                    <summary>Need a hint?</summary>
+                    <p class="hint-text">
+                        Only an alien of extraordinary ability can <strong>dramatically<strong> help you.
+                    </p>
+                </details>
+            </div>
             
             <form id="passwordForm" class="password-form">
                 <input type="text" id="passwordInput" placeholder="Enter your answer" autocomplete="off">
@@ -30,25 +40,13 @@
             
             <div id="feedback" class="feedback"></div>
         </div>
-
-        <div class="navigation">
-            <a href="index.html" class="btn btn-secondary">Back to Start</a>
-        </div>
     </div>
 
+    <script src="crypto-utils.js"></script>
+    <script src="clues.js"></script>
     <script>
         const STORAGE_KEY = "hunt2025_progress";
-        
-        const clues = {
-            "kinkajou": "clue2.html",
-            "turkey-anteater": "clue3.html",
-            "hand-basin": "clue4.html",
-            "sit-on-us": "clue5.html",
-            "yucca-sego-lily": "clue6.html",
-            "zhur": "clue7.html",
-            "cavansite": "clue8.html",
-            "ribosome": "final.html"
-        };
+        const clues = window.SECURE_CLUES_MAP;
 
         function loadProgress() {
             try { 
@@ -62,9 +60,13 @@
             localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
         }
 
-        function jumpTo(lastPassword) {
-            if (clues[lastPassword]) {
-                window.location.href = clues[lastPassword];
+        async function jumpTo(lastPassword) {
+            const hash = await cryptoUtils.sha256(lastPassword);
+            if (clues[hash]) {
+                const nextPage = await cryptoUtils.decrypt(lastPassword, clues[hash]);
+                if (nextPage) {
+                    window.location.href = nextPage;
+                }
             }
         }
 
@@ -86,34 +88,46 @@
         const continueBtn = document.getElementById('continueBtn');
         const resetBtn = document.getElementById('resetBtn');
 
-        if (progress.length > 0 && progress.at(-1) !== "cavansite") {
+        if (progress.length > 0) {
             continueSection.style.display = 'block';
-            continueBtn.onclick = () => jumpTo(progress.at(-1));
+            continueBtn.onclick = async () => await jumpTo(progress.at(-1));
             resetBtn.onclick = () => {
                 if (confirm('Are you sure you want to reset all progress?')) {
                     localStorage.removeItem(STORAGE_KEY);
-                    window.location.href = 'clue1.html';
+                    window.location.reload();
                 }
             };
         }
 
-        document.getElementById('passwordForm').addEventListener('submit', (e) => {
+        document.getElementById('passwordForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const input = document.getElementById('passwordInput');
             const answer = input.value.toLowerCase().trim();
             
-            if (clues[answer]) {
-                const currentProgress = loadProgress();
-                if (!currentProgress.includes(answer)) {
-                    currentProgress.push(answer);
-                    saveProgress(currentProgress);
-                }
+            // Hash the password
+            const hash = await cryptoUtils.sha256(answer);
+            
+            // Check if hash exists in secure map
+            if (clues[hash]) {
+                // Decrypt the filename
+                const nextPage = await cryptoUtils.decrypt(answer, clues[hash]);
                 
-                showFeedback('Correct! Redirecting to final page...', true);
-                setTimeout(() => {
-                    window.location.href = clues[answer];
-                }, 1500);
+                if (nextPage) {
+                    const currentProgress = loadProgress();
+                    if (!currentProgress.includes(answer)) {
+                        currentProgress.push(answer);
+                        saveProgress(currentProgress);
+                    }
+                    
+                    showFeedback('Correct! Redirecting to next clue...', true);
+                    setTimeout(() => {
+                        window.location.href = nextPage;
+                    }, 1500);
+                } else {
+                    showFeedback('Not quite right. Try again!', false);
+                    input.value = '';
+                }
             } else {
                 showFeedback('Not quite right. Try again!', false);
                 input.value = '';

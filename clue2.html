@@ -19,11 +19,19 @@
         <div id="clueSection" class="clue-section">
             <h2>Clue #2</h2>
             <p class="clue-text">
-                In darkness I dance, yet I have no feet,<br>
-                I mimic your moves, a silent repeat.<br>
-                Behind the screen, I tell tales without sound,<br>
-                What performance art am I, where light and dark are bound?
+                First word — Left of the praying mantis.<br>
+                Second word — In between the zebras.
             </p>
+            
+            <div class="hint-section">
+                <details>
+                    <summary>Need a hint?</summary>
+                    <p class="hint-text">
+                        Remember the peacock stands alone.<br>
+                        <strong>Contact the Hunt Master</strong> for more guidance.
+                    </p>
+                </details>
+            </div>
             
             <form id="passwordForm" class="multi-word-form">
                 <div class="word-input-group">
@@ -46,9 +54,14 @@
         const STORAGE_KEY = "hunt2025_progress";
         
         const clues = {
-            "e": "clue2.html",
-            "shadow-puppet": "clue3.html",
-            "time": "final.html"
+            "kinkajou": "clue2.html",
+            "turkey-anteater": "clue3.html",
+            "hand-basin": "clue4.html",
+            "sit-on-us": "clue5.html",
+            "yucca-sego-lily": "clue6.html",
+            "zhur": "clue7.html",
+            "cavansite": "clue8.html",
+            "ribosome": "final.html"
         };
 
         function loadProgress() {
@@ -87,7 +100,7 @@
         const continueBtn = document.getElementById('continueBtn');
         const resetBtn = document.getElementById('resetBtn');
 
-        if (progress.length > 0 && progress.at(-1) !== "e") {
+        if (progress.length > 0 && progress.at(-1) !== "kinkajou") {
             continueSection.style.display = 'block';
             continueBtn.onclick = () => jumpTo(progress.at(-1));
             resetBtn.onclick = () => {

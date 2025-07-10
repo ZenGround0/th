@@ -13,8 +13,14 @@
             <h2>You've completed the Treasure Hunt!</h2>
             
             <div class="success-message">
-                <p>Well done! You've successfully solved all the clues and completed the treasure hunt.</p>
-                <p>Your journey through the riddles has come to an end.</p>
+                <p>Well done! You've successfully solved all the clues!</p>
+                <p style="font-weight: bold; margin-top: 1.5rem;">Your final message:</p>
+                <p style="font-style: italic; line-height: 1.8; margin-top: 1rem;">
+                    The key is close like a crystal ball I can hear it down the road.<br>
+                    Splashing in a unicorn speaking to you in code.<br>
+                    The challenge is near so probably fear you may be in great trouble.<br>
+                    The witch of Windsor might just crush your garnet dreams to rubble.
+                </p>
             </div>
 
             <div class="stats">
@@ -44,9 +50,14 @@
         const progressList = document.getElementById('progressList');
         
         const clueNames = {
-            "e": "Clue 1: The Letter Riddle",
-            "shadow-puppet": "Clue 2: The Shadow Puppet Riddle",
-            "time": "Clue 3: The Time Riddle"
+            "kinkajou": "Clue 1: The 20th Word",
+            "turkey-anteater": "Clue 2: Animals and Positions",
+            "hand-basin": "Clue 3: Reptile's Message",
+            "sit-on-us": "Clue 4: Flower Pot Warning",
+            "yucca-sego-lily": "Clue 5: Garden Guardians",
+            "zhur": "Clue 6: The Favorite Mummy",
+            "cavansite": "Clue 7: Blue Rock from Pune",
+            "ribosome": "Clue 8: Wyatt's Exhibit"
         };
         
         progress.forEach(answer => {

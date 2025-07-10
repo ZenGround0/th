@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Treasure Hunt - Clue 3</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Treasure Hunt - Clue 8</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="../common.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Treasure Hunt - Stage 3</h1>
+        <h1>Treasure Hunt - Stage 8</h1>
         
         <div id="continueSection" class="continue-section" style="display: none;">
             <p>Welcome back! You have progress saved.</p>
@@ -17,26 +19,14 @@
         </div>
 
         <div id="clueSection" class="clue-section">
-            <h2>Clue #3</h2>
+            <h2>Clue #8</h2>
             <p class="clue-text">
-                A reptile washing up, what has he written?
+                The most Wyatt exhibit on the top floor.<br>
+                A plastic model of his favorite structure which is called...
             </p>
             
-            <div class="hint-section">
-                <details>
-                    <summary>Need a hint?</summary>
-                    <p class="hint-text">
-                        <a href="https://youtu.be/VA770wpLX-Q?si=dtw3LIVN-p3JFxga&t=175" target="_blank">Watch this video</a>
-                    </p>
-                </details>
-            </div>
-            
-            <form id="passwordForm" class="multi-word-form">
-                <div class="word-input-group">
-                    <input type="text" id="word1" class="word-input" placeholder="First word" autocomplete="off">
-                    <span class="word-separator">+</span>
-                    <input type="text" id="word2" class="word-input" placeholder="Second word" autocomplete="off">
-                </div>
+            <form id="passwordForm" class="password-form">
+                <input type="text" id="passwordInput" placeholder="Enter your answer" autocomplete="off">
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
             
@@ -44,7 +34,43 @@
         </div>
 
         <div class="navigation">
-            <a href="index.html" class="btn btn-secondary">Back to Start</a>
+            <a href="../index.html" class="btn btn-secondary">Back to Start</a>
+        </div>
+    </div>
+
+        <script>
+        // Initialize clue 8 - expects answer "ribosome"
+        initializeClue("cavansite", "ribosome", false);
+    </script>
+    <script src="../common.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Treasure Hunt - Stage 8</h1>
+        
+        <div id="continueSection" class="continue-section" style="display: none;">
+            <p>Welcome back! You have progress saved.</p>
+            <button id="continueBtn" class="btn btn-primary">Continue Hunt</button>
+            <button id="resetBtn" class="btn btn-secondary">Reset Progress</button>
+        </div>
+
+        <div id="clueSection" class="clue-section">
+            <h2>Clue #8</h2>
+            <p class="clue-text">
+                The most Wyatt exhibit on the top floor.<br>
+                A plastic model of his favorite structure which is called...
+            </p>
+            
+            <form id="passwordForm" class="password-form">
+                <input type="text" id="passwordInput" placeholder="Enter your answer" autocomplete="off">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            
+            <div id="feedback" class="feedback"></div>
+        </div>
+
+        <div class="navigation">
+            <a href="../index.html" class="btn btn-secondary">Back to Start</a>
         </div>
     </div>
 
@@ -98,7 +124,7 @@
         const continueBtn = document.getElementById('continueBtn');
         const resetBtn = document.getElementById('resetBtn');
 
-        if (progress.length > 0 && progress.at(-1) !== "turkey-anteater") {
+        if (progress.length > 0 && progress.at(-1) !== "cavansite") {
             continueSection.style.display = 'block';
             continueBtn.onclick = () => jumpTo(progress.at(-1));
             resetBtn.onclick = () => {
@@ -112,15 +138,8 @@
         document.getElementById('passwordForm').addEventListener('submit', (e) => {
             e.preventDefault();
             
-            const word1 = document.getElementById('word1').value.toLowerCase().trim();
-            const word2 = document.getElementById('word2').value.toLowerCase().trim();
-            
-            if (!word1 || !word2) {
-                showFeedback('Please fill in both words!', false);
-                return;
-            }
-            
-            const answer = `${word1}-${word2}`;
+            const input = document.getElementById('passwordInput');
+            const answer = input.value.toLowerCase().trim();
             
             if (clues[answer]) {
                 const currentProgress = loadProgress();
@@ -129,15 +148,13 @@
                     saveProgress(currentProgress);
                 }
                 
-                showFeedback('Correct! Redirecting to next clue...', true);
+                showFeedback('Correct! Redirecting to final page...', true);
                 setTimeout(() => {
                     window.location.href = clues[answer];
                 }, 1500);
             } else {
                 showFeedback('Not quite right. Try again!', false);
-                document.getElementById('word1').value = '';
-                document.getElementById('word2').value = '';
-                document.getElementById('word1').focus();
+                input.value = '';
             }
         });
     </script>

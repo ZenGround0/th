@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Treasure Hunt 2025</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Treasure Hunt - Clue 2</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="../common.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to the Treasure Hunt!</h1>
+        <h1>Treasure Hunt - Stage 2</h1>
         
         <div id="continueSection" class="continue-section" style="display: none;">
             <p>Welcome back! You have progress saved.</p>
@@ -17,28 +19,84 @@
         </div>
 
         <div id="clueSection" class="clue-section">
-            <h2>Clue #1</h2>
+            <h2>Clue #2</h2>
             <p class="clue-text">
-                " ___ sand ____ Jamaican ____ mourning ____ _____ SMALL ____ ____ superb"<br>
-                <br>
-                Find the 20th word in this sequence
+                First word — Left of the praying mantis.<br>
+                Second word — In between the zebras.
             </p>
             
             <div class="hint-section">
                 <details>
                     <summary>Need a hint?</summary>
                     <p class="hint-text">
-                        Only an alien of extraordinary ability can <strong>dramatically<strong> help you.
+                        Remember the peacock stands <strong>alone<strong>
                     </p>
                 </details>
             </div>
             
-            <form id="passwordForm" class="password-form">
-                <input type="text" id="passwordInput" placeholder="Enter your answer" autocomplete="off">
+            <form id="passwordForm" class="multi-word-form">
+                <div class="word-input-group">
+                    <input type="text" id="word1" class="word-input" placeholder="First word" autocomplete="off">
+                    <span class="word-separator">+</span>
+                    <input type="text" id="word2" class="word-input" placeholder="Second word" autocomplete="off">
+                </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
             
             <div id="feedback" class="feedback"></div>
+        </div>
+
+        <div class="navigation">
+            <a href="../index.html" class="btn btn-secondary">Back to Start</a>
+        </div>
+    </div>
+
+        <script>
+        // Initialize clue 2 - expects answer "turkey-anteater"
+        initializeClue("kinkajou", "turkey-anteater", 2);
+    </script>
+    <script src="../common.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Treasure Hunt - Stage 2</h1>
+        
+        <div id="continueSection" class="continue-section" style="display: none;">
+            <p>Welcome back! You have progress saved.</p>
+            <button id="continueBtn" class="btn btn-primary">Continue Hunt</button>
+            <button id="resetBtn" class="btn btn-secondary">Reset Progress</button>
+        </div>
+
+        <div id="clueSection" class="clue-section">
+            <h2>Clue #2</h2>
+            <p class="clue-text">
+                First word — Left of the praying mantis.<br>
+                Second word — In between the zebras.
+            </p>
+            
+            <div class="hint-section">
+                <details>
+                    <summary>Need a hint?</summary>
+                    <p class="hint-text">
+                        Remember the peacock stands <strong>alone<strong>
+                    </p>
+                </details>
+            </div>
+            
+            <form id="passwordForm" class="multi-word-form">
+                <div class="word-input-group">
+                    <input type="text" id="word1" class="word-input" placeholder="First word" autocomplete="off">
+                    <span class="word-separator">+</span>
+                    <input type="text" id="word2" class="word-input" placeholder="Second word" autocomplete="off">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            
+            <div id="feedback" class="feedback"></div>
+        </div>
+
+        <div class="navigation">
+            <a href="../index.html" class="btn btn-secondary">Back to Start</a>
         </div>
     </div>
 
@@ -92,13 +150,13 @@
         const continueBtn = document.getElementById('continueBtn');
         const resetBtn = document.getElementById('resetBtn');
 
-        if (progress.length > 0) {
+        if (progress.length > 0 && progress.at(-1) !== "kinkajou") {
             continueSection.style.display = 'block';
             continueBtn.onclick = () => jumpTo(progress.at(-1));
             resetBtn.onclick = () => {
                 if (confirm('Are you sure you want to reset all progress?')) {
                     localStorage.removeItem(STORAGE_KEY);
-                    window.location.reload();
+                    window.location.href = 'clue1.html';
                 }
             };
         }
@@ -106,8 +164,15 @@
         document.getElementById('passwordForm').addEventListener('submit', (e) => {
             e.preventDefault();
             
-            const input = document.getElementById('passwordInput');
-            const answer = input.value.toLowerCase().trim();
+            const word1 = document.getElementById('word1').value.toLowerCase().trim();
+            const word2 = document.getElementById('word2').value.toLowerCase().trim();
+            
+            if (!word1 || !word2) {
+                showFeedback('Please fill in both words!', false);
+                return;
+            }
+            
+            const answer = `${word1}-${word2}`;
             
             if (clues[answer]) {
                 const currentProgress = loadProgress();
@@ -122,7 +187,9 @@
                 }, 1500);
             } else {
                 showFeedback('Not quite right. Try again!', false);
-                input.value = '';
+                document.getElementById('word1').value = '';
+                document.getElementById('word2').value = '';
+                document.getElementById('word1').focus();
             }
         });
     </script>

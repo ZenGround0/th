@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treasure Hunt - Clue 1</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="../common.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the Treasure Hunt!</h1>
+        
+        <div id="continueSection" class="continue-section" style="display: none;">
+            <p>Welcome back! You have progress saved.</p>
+            <button id="continueBtn" class="btn btn-primary">Continue Hunt</button>
+            <button id="resetBtn" class="btn btn-secondary">Reset Progress</button>
+        </div>
+
+        <div id="clueSection" class="clue-section">
+            <h2>Clue #1</h2>
+            <p class="clue-text">
+                " ___ sand ____ Jamaican ____ mourning ____ _____ SMALL ____ ____ superb"<br>
+                <br>
+                Find the 20th word in this sequence
+            </p>
+            
+            <div class="hint-section">
+                <details>
+                    <summary>Need a hint?</summary>
+                    <p class="hint-text">
+                        Only an alien of extraordinary ability can <strong>dramatically<strong> help you.
+                    </p>
+                </details>
+            </div>
+            
+            <form id="passwordForm" class="password-form">
+                <input type="text" id="passwordInput" placeholder="Enter your answer" autocomplete="off">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            
+            <div id="feedback" class="feedback"></div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize clue 1 - expects answer "kinkajou"
+        initializeClue(null, "kinkajou", false);
+    </script>
+</body>
+</html>

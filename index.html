@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Treasure Hunt 2025 - Welcome</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -43,23 +44,18 @@
         
         <div class="start-section">
             <p>Ready to begin your adventure?</p>
-            <a href="clue1.html" class="btn btn-primary btn-large">Start the Hunt!</a>
+            <button id="startHuntBtn" class="btn btn-primary btn-large">Start the Hunt!</button>
         </div>
     </div>
     
     <script>
         const STORAGE_KEY = "hunt2025_progress";
+        const SALT = "--ShireMint2025";
         
-        const clues = {
-            "kinkajou": "clue2.html",
-            "turkey-anteater": "clue3.html",
-            "hand-basin": "clue4.html",
-            "sit-on-us": "clue5.html",
-            "yucca-sego-lily": "clue6.html",
-            "zhur": "clue7.html",
-            "cavansite": "clue8.html",
-            "ribosome": "final.html"
-        };
+        function generateHash(password) {
+            const hash = CryptoJS.SHA256(password + SALT).toString(CryptoJS.enc.Hex);
+            return hash.slice(0, 24);
+        }
         
         function loadProgress() {
             try { 
@@ -70,9 +66,8 @@
         }
         
         function jumpTo(lastPassword) {
-            if (clues[lastPassword]) {
-                window.location.href = clues[lastPassword];
-            }
+            const hash = generateHash(lastPassword);
+            window.location.href = "clues/" + hash + ".html";
         }
         
         const progress = loadProgress();
@@ -90,6 +85,12 @@
                 }
             };
         }
+        
+        // Start hunt button
+        document.getElementById('startHuntBtn').onclick = () => {
+            const startHash = generateHash("start");
+            window.location.href = "clues/" + startHash + ".html";
+        };
     </script>
 </body>
 </html>

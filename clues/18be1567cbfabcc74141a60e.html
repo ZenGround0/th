@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Treasure Hunt - Clue 2</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Treasure Hunt - Clue 5</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="../common.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Treasure Hunt - Stage 2</h1>
+        <h1>Treasure Hunt - Stage 5</h1>
         
         <div id="continueSection" class="continue-section" style="display: none;">
             <p>Welcome back! You have progress saved.</p>
@@ -17,26 +19,22 @@
         </div>
 
         <div id="clueSection" class="clue-section">
-            <h2>Clue #2</h2>
+            <h2>Clue #5</h2>
             <p class="clue-text">
-                First word — Left of the praying mantis.<br>
-                Second word — In between the zebras.
+                By the calochortus circle carved into the rock, these two graven images rise right above the walk.<br>
+                On the left is Solomon seal as false as you could be.<br>
+                To the right's a giant sunflower attracting all the bees.<br>
+                Find their names and type them in the key is yours for the slaughter.<br>
+                But be careful lest the bodhster boy jumps swimming in the WATAAAAH!
             </p>
-            
-            <div class="hint-section">
-                <details>
-                    <summary>Need a hint?</summary>
-                    <p class="hint-text">
-                        Remember the peacock stands <strong>alone<strong>
-                    </p>
-                </details>
-            </div>
             
             <form id="passwordForm" class="multi-word-form">
                 <div class="word-input-group">
                     <input type="text" id="word1" class="word-input" placeholder="First word" autocomplete="off">
                     <span class="word-separator">+</span>
                     <input type="text" id="word2" class="word-input" placeholder="Second word" autocomplete="off">
+                    <span class="word-separator">+</span>
+                    <input type="text" id="word3" class="word-input" placeholder="Third word" autocomplete="off">
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
@@ -45,7 +43,52 @@
         </div>
 
         <div class="navigation">
-            <a href="index.html" class="btn btn-secondary">Back to Start</a>
+            <a href="../index.html" class="btn btn-secondary">Back to Start</a>
+        </div>
+    </div>
+
+        <script>
+        // Initialize clue 5 - expects answer "yucca-sego-lily"
+        initializeClue("sit-on-us", "yucca-sego-lily", 3);
+    </script>
+    <script src="../common.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Treasure Hunt - Stage 5</h1>
+        
+        <div id="continueSection" class="continue-section" style="display: none;">
+            <p>Welcome back! You have progress saved.</p>
+            <button id="continueBtn" class="btn btn-primary">Continue Hunt</button>
+            <button id="resetBtn" class="btn btn-secondary">Reset Progress</button>
+        </div>
+
+        <div id="clueSection" class="clue-section">
+            <h2>Clue #5</h2>
+            <p class="clue-text">
+                By the calochortus circle carved into the rock, these two graven images rise right above the walk.<br>
+                On the left is Solomon seal as false as you could be.<br>
+                To the right's a giant sunflower attracting all the bees.<br>
+                Find their names and type them in the key is yours for the slaughter.<br>
+                But be careful lest the bodhster boy jumps swimming in the WATAAAAH!
+            </p>
+            
+            <form id="passwordForm" class="multi-word-form">
+                <div class="word-input-group">
+                    <input type="text" id="word1" class="word-input" placeholder="First word" autocomplete="off">
+                    <span class="word-separator">+</span>
+                    <input type="text" id="word2" class="word-input" placeholder="Second word" autocomplete="off">
+                    <span class="word-separator">+</span>
+                    <input type="text" id="word3" class="word-input" placeholder="Third word" autocomplete="off">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            
+            <div id="feedback" class="feedback"></div>
+        </div>
+
+        <div class="navigation">
+            <a href="../index.html" class="btn btn-secondary">Back to Start</a>
         </div>
     </div>
 
@@ -99,7 +142,7 @@
         const continueBtn = document.getElementById('continueBtn');
         const resetBtn = document.getElementById('resetBtn');
 
-        if (progress.length > 0 && progress.at(-1) !== "kinkajou") {
+        if (progress.length > 0 && progress.at(-1) !== "sit-on-us") {
             continueSection.style.display = 'block';
             continueBtn.onclick = () => jumpTo(progress.at(-1));
             resetBtn.onclick = () => {
@@ -115,13 +158,14 @@
             
             const word1 = document.getElementById('word1').value.toLowerCase().trim();
             const word2 = document.getElementById('word2').value.toLowerCase().trim();
+            const word3 = document.getElementById('word3').value.toLowerCase().trim();
             
-            if (!word1 || !word2) {
-                showFeedback('Please fill in both words!', false);
+            if (!word1 || !word2 || !word3) {
+                showFeedback('Please fill in all three words!', false);
                 return;
             }
             
-            const answer = `${word1}-${word2}`;
+            const answer = `${word1}-${word2}-${word3}`;
             
             if (clues[answer]) {
                 const currentProgress = loadProgress();
@@ -138,6 +182,7 @@
                 showFeedback('Not quite right. Try again!', false);
                 document.getElementById('word1').value = '';
                 document.getElementById('word2').value = '';
+                document.getElementById('word3').value = '';
                 document.getElementById('word1').focus();
             }
         });

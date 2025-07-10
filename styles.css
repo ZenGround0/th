@@ -444,31 +444,16 @@ h2 {
     }
 }
 
-/* Watermelon slice decorations */
-.container::before,
-.container::after {
-    content: '';
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    background: 
-        radial-gradient(circle at 50% 100%, #ff6b6b 30%, #ffb3ba 30%, #ffb3ba 70%, #2ed573 70%, #2ed573 85%, #0c5e2e 85%);
-    border-radius: 50% 50% 0 0;
-    transform: rotate(-45deg);
-    opacity: 0.8;
-    z-index: -1;
-}
-
+/* Watermelon image decoration */
 .container::before {
-    top: -30px;
-    left: -30px;
-    transform: rotate(-45deg);
-}
-
-.container::after {
-    bottom: -30px;
-    right: -30px;
-    transform: rotate(135deg);
+    content: '🍉';
+    position: absolute;
+    top: -40px;
+    left: -40px;
+    font-size: 80px;
+    opacity: 0.9;
+    z-index: -1;
+    transform: rotate(-15deg);
 }
 
 /* Floating watermelon seeds animation */

@@ -10,6 +10,12 @@
     <div class="container">
         <h1>Welcome to the Treasure Hunt 2025!</h1>
         
+        <div id="continueSection" class="continue-section" style="display: none;">
+            <p>Welcome back! You have progress saved.</p>
+            <button id="continueBtn" class="btn btn-primary">Continue Hunt</button>
+            <button id="resetBtn" class="btn btn-secondary">Reset Progress</button>
+        </div>
+        
         <div class="instructions-section">
             <h2>How to Play</h2>
             <p>You'll encounter various riddles and puzzles throughout this treasure hunt. Each correct answer will lead you to the next clue.</p>
@@ -40,5 +46,50 @@
             <a href="clue1.html" class="btn btn-primary btn-large">Start the Hunt!</a>
         </div>
     </div>
+    
+    <script>
+        const STORAGE_KEY = "hunt2025_progress";
+        
+        const clues = {
+            "kinkajou": "clue2.html",
+            "turkey-anteater": "clue3.html",
+            "hand-basin": "clue4.html",
+            "sit-on-us": "clue5.html",
+            "yucca-sego-lily": "clue6.html",
+            "zhur": "clue7.html",
+            "cavansite": "clue8.html",
+            "ribosome": "final.html"
+        };
+        
+        function loadProgress() {
+            try { 
+                return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; 
+            } catch { 
+                return []; 
+            }
+        }
+        
+        function jumpTo(lastPassword) {
+            if (clues[lastPassword]) {
+                window.location.href = clues[lastPassword];
+            }
+        }
+        
+        const progress = loadProgress();
+        const continueSection = document.getElementById('continueSection');
+        const continueBtn = document.getElementById('continueBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        if (progress.length > 0) {
+            continueSection.style.display = 'block';
+            continueBtn.onclick = () => jumpTo(progress.at(-1));
+            resetBtn.onclick = () => {
+                if (confirm('Are you sure you want to reset all progress?')) {
+                    localStorage.removeItem(STORAGE_KEY);
+                    window.location.reload();
+                }
+            };
+        }
+    </script>
 </body>
 </html>

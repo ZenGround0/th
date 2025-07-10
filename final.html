@@ -23,11 +23,6 @@
                 </p>
             </div>
 
-            <div class="stats">
-                <h3>Your Progress:</h3>
-                <ul id="progressList"></ul>
-            </div>
-
             <div class="actions">
                 <button id="resetBtn" class="btn btn-primary">Start New Hunt</button>
                 <a href="index.html" class="btn btn-secondary">Back to Beginning</a>
@@ -45,26 +40,6 @@
                 return []; 
             }
         }
-
-        const progress = loadProgress();
-        const progressList = document.getElementById('progressList');
-        
-        const clueNames = {
-            "kinkajou": "Clue 1: The 20th Word",
-            "turkey-anteater": "Clue 2: Animals and Positions",
-            "hand-basin": "Clue 3: Reptile's Message",
-            "sit-on-us": "Clue 4: Flower Pot Warning",
-            "yucca-sego-lily": "Clue 5: Garden Guardians",
-            "zhur": "Clue 6: The Favorite Mummy",
-            "cavansite": "Clue 7: Blue Rock from Pune",
-            "ribosome": "Clue 8: Wyatt's Exhibit"
-        };
-        
-        progress.forEach(answer => {
-            const li = document.createElement('li');
-            li.textContent = clueNames[answer] || answer;
-            progressList.appendChild(li);
-        });
 
         document.getElementById('resetBtn').onclick = () => {
             if (confirm('Start a new treasure hunt? This will reset all your progress.')) {

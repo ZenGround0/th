@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Treasure Hunt - Congratulations!</title>
+    <title>KEY Hunt - Congratulations!</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <div class="final-section">
             <h1>🎉 Congratulations! 🎉</h1>
-            <h2>You've completed the Treasure Hunt!</h2>
+            <h2>You've almost completed the KEY Hunt!</h2>
             
             <div class="success-message">
                 <p>Well done! You've successfully solved all the clues!</p>
@@ -24,7 +24,7 @@
             </div>
 
             <div class="actions">
-                <button id="resetBtn" class="btn btn-primary">Start New Hunt</button>
+                <button id="resetBtn" class="btn btn-primary">Do it all again</button>
                 <a href="index.html" class="btn btn-secondary">Back to Beginning</a>
             </div>
         </div>
@@ -42,7 +42,7 @@
         }
 
         document.getElementById('resetBtn').onclick = () => {
-            if (confirm('Start a new treasure hunt? This will reset all your progress.')) {
+            if (confirm('Start a new KEY hunt? This will reset all your progress.')) {
                 localStorage.removeItem(STORAGE_KEY);
                 window.location.href = 'index.html';
             }

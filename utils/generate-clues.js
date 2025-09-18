@@ -1,0 +1,97 @@
+// This script generates the SECURE_CLUES_MAP for the treasure hunt
+// Run it in a browser console or with a tool that supports Web Crypto API
+
+const mappings = {
+    "711": "clue2_prism.html",
+    "proto-flamingo": "clue3_shimmer.html",
+    "mona-lisa": "clue4_sparkle.html",
+    "millennium-falcon": "clue5_glitter.html",
+    "teotihuacan": "clue6_radiance.html",
+    "2002-games": "clue7_lustre.html",
+    "pour-teva": "clue11_glimmer.html",
+    "queen-marigold": "clue10_dazzle.html",
+    "patience": "clue8_gleam.html",
+    "sole-partner": "clue9_brilliance.html",
+    "acornimals": "clue12_shine.html",
+    "thomas": "clue13_splendor.html",
+    "16": "final_treasure.html"
+};
+
+// Based on the crypto-utils.js implementation
+async function sha256(message) {
+    const msgBuffer = new TextEncoder().encode(message);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function encrypt(text, password) {
+    const enc = new TextEncoder();
+    const dec = new TextDecoder();
+    
+    const salt = enc.encode("treasure-hunt-2025");
+    const keyMaterial = await crypto.subtle.importKey(
+        'raw',
+        enc.encode(password),
+        'PBKDF2',
+        false,
+        ['deriveBits', 'deriveKey']
+    );
+    
+    const key = await crypto.subtle.deriveKey(
+        {
+            name: 'PBKDF2',
+            salt: salt,
+            iterations: 100000,
+            hash: 'SHA-256'
+        },
+        keyMaterial,
+        { name: 'AES-GCM', length: 256 },
+        true,
+        ['encrypt']
+    );
+    
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const encryptedData = await crypto.subtle.encrypt(
+        {
+            name: 'AES-GCM',
+            iv: iv
+        },
+        key,
+        enc.encode(text)
+    );
+    
+    const encryptedArray = new Uint8Array(encryptedData);
+    const combined = new Uint8Array(iv.length + encryptedArray.length);
+    combined.set(iv);
+    combined.set(encryptedArray, iv.length);
+    
+    // Convert to base64
+    let binary = '';
+    combined.forEach(byte => binary += String.fromCharCode(byte));
+    return btoa(binary);
+}
+
+async function generateCluesMap() {
+    const SECURE_CLUES_MAP = {};
+    
+    for (const [answer, nextPage] of Object.entries(mappings)) {
+        const hash = await sha256(answer);
+        const encrypted = await encrypt(nextPage, answer);
+        SECURE_CLUES_MAP[hash] = encrypted;
+        console.log(`Mapped: ${answer} -> ${nextPage}`);
+    }
+    
+    console.log('\n\nGenerated SECURE_CLUES_MAP:');
+    console.log('export const SECURE_CLUES_MAP = ' + JSON.stringify(SECURE_CLUES_MAP, null, 2) + ';');
+    
+    return SECURE_CLUES_MAP;
+}
+
+// If running in browser, execute immediately
+if (typeof window !== 'undefined') {
+    generateCluesMap();
+} else {
+    console.log('This script must be run in a browser environment with Web Crypto API support.');
+    console.log('Copy and paste the code into your browser console.');
+}

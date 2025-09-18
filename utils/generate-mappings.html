@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Mappings - Jewel Hunt</title>
+</head>
+<body>
+    <h1>Generate SECURE_CLUES_MAP</h1>
+    <p>Open console to see the generated mappings</p>
+    
+    <script type="module">
+        import { sha256, encrypt } from './crypto-utils.js';
+        
+        // Define all answer -> next page mappings
+        const mappings = {
+            "711": "clue2_prism.html",
+            "proto-flamingo": "clue3_shimmer.html",
+            "mona-lisa": "clue4_sparkle.html",
+            "millennium-falcon": "clue5_glitter.html",
+            "teotihuacan": "clue6_radiance.html",
+            "2002-games": "clue7_lustre.html",
+            "pour-teva": "clue8_gleam.html",
+            "sole-partner": "clue9_brilliance.html",
+            "acornimals": "clue10_dazzle.html",
+            "patience": "clue11_glimmer.html",
+            "queen-marigold": "clue12_shine.html",
+            "thomas": "clue13_splendor.html",
+            "16": "final_treasure.html"
+        };
+        
+        async function generateCluesMap() {
+            const SECURE_CLUES_MAP = {};
+            
+            for (const [answer, nextPage] of Object.entries(mappings)) {
+                const hash = await sha256(answer);
+                const encrypted = await encrypt(nextPage, answer);
+                SECURE_CLUES_MAP[hash] = encrypted;
+                console.log(`Mapped: ${answer} -> ${nextPage}`);
+            }
+            
+            console.log('\n\nCopy this to clues.js:\n\n');
+            console.log('export const SECURE_CLUES_MAP = ' + JSON.stringify(SECURE_CLUES_MAP, null, 2) + ';');
+            
+            return SECURE_CLUES_MAP;
+        }
+        
+        // Generate and display
+        generateCluesMap();
+    </script>
+</body>
+</html>

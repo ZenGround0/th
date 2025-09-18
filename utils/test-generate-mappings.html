@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Secure Mappings - Jewel Hunt</title>
+</head>
+<body>
+    <h1>Generate SECURE_CLUES_MAP for Jewel Hunt</h1>
+    
+    <button onclick="generateMappings()">Generate Mappings</button>
+    <button onclick="testMappings()">Test Generated Mappings</button>
+    
+    <pre id="output"></pre>
+    
+    <script type="module">
+        import { sha256, encrypt, decrypt } from './crypto-utils.js';
+        
+        const output = document.getElementById('output');
+        
+        // Define all answer -> next page mappings
+        const mappings = {
+            "711": "clue2_prism.html",
+            "proto-flamingo": "clue3_shimmer.html",
+            "mona-lisa": "clue4_sparkle.html",
+            "millennium-falcon": "clue5_glitter.html",
+            "teotihuacan": "clue6_radiance.html",
+            "2002-games": "clue7_lustre.html",
+            "pour-teva": "clue8_gleam.html",
+            "sole-partner": "clue9_brilliance.html",
+            "acornimals": "clue10_dazzle.html",
+            "patience": "clue11_glimmer.html",
+            "queen-marigold": "clue12_shine.html",
+            "thomas": "clue13_splendor.html",
+            "16": "final_treasure.html"
+        };
+        
+        window.generateMappings = async function() {
+            output.textContent = 'Generating mappings...\n\n';
+            
+            const SECURE_CLUES_MAP = {};
+            
+            for (const [answer, nextPage] of Object.entries(mappings)) {
+                const hash = await sha256(answer);
+                const encrypted = await encrypt(nextPage, answer);
+                SECURE_CLUES_MAP[hash] = encrypted;
+                output.textContent += `Mapped: ${answer} -> ${nextPage}\n`;
+                output.textContent += `  Hash: ${hash}\n`;
+                output.textContent += `  Encrypted: ${encrypted}\n\n`;
+            }
+            
+            output.textContent += '\n\n// Copy this to clues.js:\n\n';
+            output.textContent += 'export const SECURE_CLUES_MAP = ' + JSON.stringify(SECURE_CLUES_MAP, null, 2) + ';';
+            
+            // Store globally for testing
+            window.generatedMap = SECURE_CLUES_MAP;
+        }
+        
+        window.testMappings = async function() {
+            if (!window.generatedMap) {
+                output.textContent = 'Please generate mappings first!';
+                return;
+            }
+            
+            output.textContent = 'Testing all mappings:\n\n';
+            
+            for (const [answer, expectedPage] of Object.entries(mappings)) {
+                const hash = await sha256(answer);
+                const encrypted = window.generatedMap[hash];
+                
+                if (!encrypted) {
+                    output.textContent += `ERROR: No mapping for ${answer}\n`;
+                    continue;
+                }
+                
+                try {
+                    const decrypted = await decrypt(encrypted, answer);
+                    const status = decrypted === expectedPage ? '✓' : '✗';
+                    output.textContent += `${status} ${answer} -> ${decrypted} (expected: ${expectedPage})\n`;
+                } catch (e) {
+                    output.textContent += `✗ ${answer} -> ERROR: ${e.message}\n`;
+                }
+            }
+        }
+    </script>
+</body>
+</html>

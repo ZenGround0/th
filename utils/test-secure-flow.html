@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Secure Password Flow - Jewel Hunt</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="diamond-theme">
+    <div class="container">
+        <h1>Testing Secure Password Validation</h1>
+        
+        <div style="margin: 20px 0;">
+            <label>Answer: <input type="text" id="password" style="margin: 0 10px;" /></label>
+            <button onclick="testPassword()" style="padding: 10px 20px;">Test</button>
+        </div>
+        
+        <pre id="output" style="background: rgba(0,0,0,0.5); padding: 20px; border-radius: 10px; overflow-x: auto;"></pre>
+        
+        <div style="margin-top: 30px;">
+            <h2>Expected Answers:</h2>
+            <ul style="list-style: none; padding: 0;">
+                <li>💎 711</li>
+                <li>💙 proto-flamingo</li>
+                <li>💚 mona-lisa</li>
+                <li>💜 millennium-falcon</li>
+                <li>💛 teotihuacan</li>
+                <li>💍 2002-games</li>
+                <li>💎 pour-teva</li>
+                <li>💙 sole-partner</li>
+                <li>💚 acornimals</li>
+                <li>💜 patience</li>
+                <li>💛 queen-marigold</li>
+                <li>💍 thomas</li>
+                <li>💎 16</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script type="module">
+        import { sha256, decrypt } from './crypto-utils.js';
+        import { SECURE_CLUES_MAP } from './clues.js';
+        
+        const output = document.getElementById('output');
+        
+        window.testPassword = async function() {
+            const password = document.getElementById('password').value.toLowerCase().trim();
+            output.textContent = `Testing answer: ${password}\n\n`;
+            
+            try {
+                // Hash the password
+                const hash = await sha256(password);
+                output.textContent += `Hash: ${hash}\n`;
+                
+                // Check if hash exists in map
+                const encryptedFilename = SECURE_CLUES_MAP[hash];
+                if (!encryptedFilename) {
+                    output.textContent += 'Answer not found in map!\n';
+                    return;
+                }
+                
+                output.textContent += `Found encrypted filename: ${encryptedFilename}\n`;
+                
+                // Decrypt the filename
+                const filename = await decrypt(encryptedFilename, password);
+                output.textContent += `Decrypted filename: ${filename}\n`;
+                
+                if (filename) {
+                    output.textContent += '\nSuccess! Would redirect to: ' + filename;
+                } else {
+                    output.textContent += '\nDecryption failed!';
+                }
+                
+            } catch (e) {
+                output.textContent += `Error: ${e.message}\n`;
+                console.error(e);
+            }
+        }
+        
+        // Test all known passwords automatically
+        async function testAll() {
+            const passwords = [
+                '711', 'proto-flamingo', 'mona-lisa', 'millennium-falcon',
+                'teotihuacan', '2002-games', 'pour-teva', 'sole-partner',
+                'acornimals', 'patience', 'queen-marigold', 'thomas', '16'
+            ];
+            
+            output.textContent = 'Testing all answers:\n\n';
+            
+            for (const pwd of passwords) {
+                const hash = await sha256(pwd);
+                const encrypted = SECURE_CLUES_MAP[hash];
+                if (encrypted) {
+                    try {
+                        const decrypted = await decrypt(encrypted, pwd);
+                        output.textContent += `✓ ${pwd} -> ${decrypted}\n`;
+                    } catch (e) {
+                        output.textContent += `✗ ${pwd} -> Error: ${e.message}\n`;
+                    }
+                } else {
+                    output.textContent += `✗ ${pwd} -> Not found in map\n`;
+                }
+            }
+        }
+        
+        // Run automatic test on load
+        window.onload = testAll;
+    </script>
+</body>
+</html>

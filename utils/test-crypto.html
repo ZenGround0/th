@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Crypto Functions</title>
+</head>
+<body>
+    <h1>Test Crypto Functions</h1>
+    <p>Check console for output</p>
+    
+    <script type="module">
+        import { sha256, encrypt, decrypt } from './crypto-utils.js';
+        
+        async function test() {
+            console.log('Testing crypto functions...');
+            
+            // Test sha256
+            const hash = await sha256('711');
+            console.log('SHA256 of "711":', hash);
+            
+            // Test encrypt/decrypt
+            const plaintext = 'clue2_prism.html';
+            const password = '711';
+            
+            console.log('Encrypting:', plaintext, 'with password:', password);
+            const encrypted = await encrypt(plaintext, password);
+            console.log('Encrypted:', encrypted);
+            
+            console.log('Decrypting...');
+            const decrypted = await decrypt(encrypted, password);
+            console.log('Decrypted:', decrypted);
+            
+            console.log('Match:', plaintext === decrypted);
+        }
+        
+        test();
+    </script>
+</body>
+</html>
